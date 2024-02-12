@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
@@ -8,10 +9,14 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] Rigidbody2D rigid;
+    [SerializeField] Animator animator;
 
     [Header("Specs")]
     [SerializeField] float jumpPower;
     [SerializeField] float moveSpeed;
+
+    [Header("Events")]
+    public UnityEvent OnDied;
 
     private void Update()
     {
@@ -35,5 +40,14 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+    }
+    private void Die()
+    {
+        animator.SetBool("Die", true);
+        OnDied?.Invoke();
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Die();
     }
 }
